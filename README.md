@@ -1,6 +1,6 @@
 # Daily Digest for FreeScout
 
-Version 1.0.0 · Built and tested against FreeScout **1.8.241**.
+Version 1.0.1 · Built and tested against FreeScout **1.8.241**.
 
 Sends one daily email per active human user containing their assigned Active conversations across all accessible, active mailboxes. The same conversations return in the next day's digest while they remain eligible. Configure it once under **Manage → Settings → Daily Digest**.
 
@@ -8,7 +8,7 @@ No API & Webhooks module, Workflows rules, external service, Composer installati
 
 ## Install
 
-1. Upload `DailyDigest-1.0.0.zip` to your FreeScout server.
+1. Upload `DailyDigest-1.0.1.zip` to your FreeScout server.
 2. Extract it into FreeScout's `Modules` directory. The resulting path must be `Modules/DailyDigest/module.json`, not `Modules/DailyDigest/DailyDigest/module.json`.
 3. Give the module files the same owner as your FreeScout application.
 4. Clear FreeScout's cache, then activate **DailyDigest** under **Manage → Modules**.
@@ -17,7 +17,7 @@ No API & Webhooks module, Workflows rules, external service, Composer installati
 Example for an Ubuntu installation at `/var/www/freescout`, with PHP running as `www-data`. Confirm those values match your server. Run from the directory containing the uploaded ZIP:
 
 ```sh
-sudo unzip DailyDigest-1.0.0.zip -d /var/www/freescout/Modules
+sudo unzip DailyDigest-1.0.1.zip -d /var/www/freescout/Modules
 sudo chown -R www-data:www-data /var/www/freescout/Modules/DailyDigest
 cd /var/www/freescout
 sudo -u www-data php artisan freescout:clear-cache

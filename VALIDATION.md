@@ -1,4 +1,4 @@
-# Validation — Daily Digest 1.0.0
+# Validation — Daily Digest 1.0.1
 
 - Target: FreeScout 1.8.241, commit `88734eec10a898682a8dc0e846459f477d60600a`.
 - Runtime integration: PHP 8.2.29 with a disposable SQLite database and actual FreeScout models, policies, settings controller, module loader, scheduler, Blade renderer and SwiftMailer integration.

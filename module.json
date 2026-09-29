@@ -2,7 +2,7 @@
     "name": "DailyDigest",
     "alias": "dailydigest",
     "description": "One daily email per user with their aging active conversations across all accessible mailboxes.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "requiredAppVersion": "1.8.241",
     "license": "AGPL-3.0",
     "author": "",
