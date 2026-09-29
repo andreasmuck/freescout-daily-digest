@@ -25,6 +25,12 @@ sudo -u www-data php artisan freescout:clear-cache
 
 Activate the module in the browser after clearing the cache. If you already have a `Modules/DailyDigest` directory, back it up before replacing it; do not blindly overwrite a different module with the same name.
 
+## Language
+
+To use Spanish, choose **Español** as the language in your FreeScout user profile. The module settings will appear as **Resumen diario**; enable reminders with **Envío diario** and save. Each recipient’s email uses their own profile language, independently of the administrator’s language. English (`en`) and Spanish (`es`) are supported; any other language setting falls back to English for the complete subject, HTML, plain text, and email preview. The recipient’s profile setting is not changed.
+
+When updating an existing installation, replace the module files, including `Resources/lang/es.json` and `Services/RecipientLocale.php`, then run `sudo -u www-data php artisan freescout:clear-cache` from your FreeScout application directory. Existing delivery settings are preserved.
+
 ## Suggested initial settings
 
 | Setting | Suggested value |
@@ -93,7 +99,7 @@ To stop reminders, set **Daily delivery → Disabled** and save. You can also de
 
 Validated with the actual FreeScout 1.8.241 source, commit `88734eec10a898682a8dc0e846459f477d60600a`, PHP 8.2.29, and an isolated SQLite fixture database. PHP syntax was also checked with PHP 8.3.32. The included integration checks cover module discovery, settings saving, scheduler registration, mailbox permissions, conversation filtering, age boundaries, Chilean DST, daily repeat/deduplication, failures, large backlogs, HTML escaping, multipart mail, and administrator-only preview access. Mail transports were intercepted; no real email was sent.
 
-Not yet installed or tested on your server, your production database, or your SMTP provider. Other third-party modules and later FreeScout versions may need compatibility checks. The email uses translation-ready English strings; this release does not bundle a Spanish translation.
+Not yet installed or tested on your server, your production database, or your SMTP provider. Other third-party modules and later FreeScout versions may need compatibility checks. English and Spanish are included. Settings and preview controls follow the signed-in administrator’s FreeScout language. Email subjects, HTML, plain text, and the email content inside previews follow the recipient’s profile language (or FreeScout’s default when unset).
 
 For developers, install this module in a **disposable** checkout of that FreeScout release (with bundled `vendor/`) and run:
 

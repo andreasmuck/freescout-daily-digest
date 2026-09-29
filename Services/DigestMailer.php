@@ -6,6 +6,13 @@ class DigestMailer
 {
     public function send(array $digest)
     {
+        return RecipientLocale::run($digest['user'], function () use ($digest) {
+            return $this->sendLocalized($digest);
+        });
+    }
+
+    protected function sendLocalized(array $digest)
+    {
         \MailHelper::setSystemMailDriver();
         $driver = config('mail.driver');
         if (!in_array($driver, ['smtp', 'sendmail', 'mail', 'mailgun', 'ses', 'sparkpost'], true)) {

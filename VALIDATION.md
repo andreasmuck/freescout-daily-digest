@@ -46,6 +46,33 @@ PASS: multipart HTML and plain text email
 PASS: automatic email header
 PASS: settings form and preview selector render
 PASS: non-admin blocked by preview controller
+PASS: Spanish catalog loads
+PASS: Spanish catalog covers every module translation string
+PASS: Spanish translations preserve all replacement tokens
+PASS: Spanish settings navigation
+PASS: Spanish settings form
+PASS: Spanish recipient gets Spanish email subject
+PASS: Spanish HTML and plain text parts
+PASS: successful send restores worker language
+PASS: preview uses recipient language and restores administrator language
+PASS: English recipient remains English in a Spanish batch
+PASS: fr recipient gets English subject
+PASS: fr recipient gets fully English HTML and plain text
+PASS: fr preview also falls back to English
+PASS: fr fallback preserves worker and profile language
+PASS: de recipient gets English subject
+PASS: de recipient gets fully English HTML and plain text
+PASS: de preview also falls back to English
+PASS: de fallback preserves worker and profile language
+PASS: pt-BR recipient gets English subject
+PASS: pt-BR recipient gets fully English HTML and plain text
+PASS: pt-BR preview also falls back to English
+PASS: pt-BR fallback preserves worker and profile language
+PASS: zz recipient gets English subject
+PASS: zz recipient gets fully English HTML and plain text
+PASS: zz preview also falls back to English
+PASS: zz fallback preserves worker and profile language
+PASS: failed send restores worker language
 PASS: core settings controller persists module configuration
 PASS: preview sends nothing and claims nothing
 PASS: disabled by default even for send-now
@@ -59,5 +86,5 @@ PASS: malformed user filter rejected
 PASS: missing user reported
 PASS: chunked backlog counted without duplicate or missing rows
 
-48 checks passed; all email delivery was intercepted.
+75 checks passed; all email delivery was intercepted.
 ```

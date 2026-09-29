@@ -10,6 +10,7 @@ class DailyDigestServiceProvider extends ServiceProvider
 {
     public function register()
     {
+        $this->loadJsonTranslationsFrom(__DIR__.'/../Resources/lang');
         $this->commands([SendDigest::class]);
     }
 

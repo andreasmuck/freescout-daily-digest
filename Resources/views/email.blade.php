@@ -1,5 +1,5 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ __('Your active conversations') }}</title></head>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ __('Your active conversations') }}</title></head>
 <body style="margin:0;padding:24px 12px;background:#f3f5f7;color:#243247;font-family:Arial,sans-serif;">
 <div style="max-width:900px;margin:0 auto;background:white;padding:24px;border:1px solid #dde3e9;border-radius:8px;">
     <p style="margin:0 0 8px;color:#68778b;font-size:13px;">{{ config('app.name', 'FreeScout') }} · {{ $date }}</p>

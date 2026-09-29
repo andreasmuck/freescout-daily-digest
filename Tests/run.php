@@ -144,6 +144,80 @@ try {
     try { (new Modules\DailyDigest\Http\Controllers\DigestController())->preview($request); }
     catch (Symfony\Component\HttpKernel\Exception\HttpException $e) { $blocked=$e->getStatusCode()===403; }
     check($blocked,'non-admin blocked by preview controller');
+
+    // Language changes must cover the subject and both email parts, then restore
+    // the administrator/worker locale even when a send fails.
+    $spanish = json_decode(file_get_contents(__DIR__.'/../Resources/lang/es.json'), true);
+    check(is_array($spanish) && count($spanish) === 57, 'Spanish catalog loads');
+    $allStrings=[];
+    foreach (['Resources/views', 'Providers', 'Services'] as $folder) {
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(__DIR__.'/../'.$folder)) as $file) {
+            if ($file->isFile() && substr($file->getFilename(), -4)==='.php') {
+                preg_match_all("/__\\('([^']*)'/u", file_get_contents($file->getPathname()), $matches);
+                $allStrings=array_merge($allStrings,$matches[1]);
+            }
+        }
+    }
+    check(!array_diff(array_unique($allStrings),array_keys($spanish)), 'Spanish catalog covers every module translation string');
+    $placeholdersMatch=true;
+    foreach ($spanish as $source=>$translated) {
+        preg_match_all('/:[a-z_]+/', $source, $originalTokens);
+        preg_match_all('/:[a-z_]+/', $translated, $translatedTokens);
+        sort($originalTokens[0]); sort($translatedTokens[0]);
+        $placeholdersMatch=$placeholdersMatch && $originalTokens[0]===$translatedTokens[0];
+    }
+    check($placeholdersMatch,'Spanish translations preserve all replacement tokens');
+    app()->setLocale('es');
+    check(Eventy::filter('settings.sections', [])['daily-digest']['title']==='Resumen diario', 'Spanish settings navigation');
+    $spanishSettings=view('dailydigest::settings', ['settings'=>$viewSettings,'digest_users'=>User::where('type',1)->where('status',1)->get(),'digest_last_run'=>[], 'errors'=>new Illuminate\Support\ViewErrorBag()])->render();
+    check(strpos($spanishSettings,'Envío diario')!==false && strpos($spanishSettings,'Hora de envío')!==false, 'Spanish settings form');
+    app()->setLocale('en');
+    $spanishDigest=$digest;
+    $spanishDigest['user']=clone $digest['user'];
+    $spanishDigest['user']->locale='es';
+    (new DigestMailer())->send($spanishDigest);
+    $spanishMessage=$transport->messages[count($transport->messages)-1];
+    check($spanishMessage->getSubject()==='Recordatorio diario: 3 conversaciones activas', 'Spanish recipient gets Spanish email subject');
+    $parts=array_merge([$spanishMessage],$spanishMessage->getChildren());
+    $htmlSpanish=strpos($spanishMessage->getBody(),'Tus conversaciones activas')!==false && strpos($spanishMessage->getBody(),'lang="es"')!==false; $textSpanish=false;
+    foreach ($parts as $part) {
+        if ($part->getContentType()==='text/html') { $htmlSpanish=strpos($part->getBody(),'Tus conversaciones activas')!==false && strpos($part->getBody(),'lang="es"')!==false; }
+        if ($part->getContentType()==='text/plain') { $textSpanish=strpos($part->getBody(),'Tus conversaciones activas')!==false; }
+    }
+    check($htmlSpanish && $textSpanish, 'Spanish HTML and plain text parts');
+    check(app()->getLocale()==='en','successful send restores worker language');
+    $spanishPreview=Modules\DailyDigest\Services\RecipientLocale::run($spanishDigest['user'], function () use ($spanishDigest) { return view('dailydigest::email',$spanishDigest)->render(); });
+    check(strpos($spanishPreview,'Tus conversaciones activas')!==false && app()->getLocale()==='en', 'preview uses recipient language and restores administrator language');
+    app()->setLocale('es');
+    (new DigestMailer())->send($digest);
+    check($transport->messages[count($transport->messages)-1]->getSubject()==='Daily reminder: 3 active conversations' && app()->getLocale()==='es','English recipient remains English in a Spanish batch');
+    app()->setLocale('en');
+
+    $expectedEnglishHtml=view('dailydigest::email', $digest)->render();
+    $expectedEnglishText=view('dailydigest::text', $digest)->render();
+    foreach (['fr', 'de', 'pt-BR', 'zz'] as $unsupportedLocale) {
+        $fallbackDigest=$digest;
+        $fallbackDigest['user']=clone $digest['user'];
+        $fallbackDigest['user']->locale=$unsupportedLocale;
+        app()->setLocale('es');
+        (new DigestMailer())->send($fallbackDigest);
+        $fallbackMessage=$transport->messages[count($transport->messages)-1];
+        check($fallbackMessage->getSubject()==='Daily reminder: 3 active conversations', $unsupportedLocale.' recipient gets English subject');
+        $fallbackText=null;
+        foreach ($fallbackMessage->getChildren() as $part) {
+            if ($part->getContentType()==='text/plain') { $fallbackText=$part->getBody(); }
+        }
+        check($fallbackMessage->getBody()===$expectedEnglishHtml && $fallbackText===$expectedEnglishText, $unsupportedLocale.' recipient gets fully English HTML and plain text');
+        $fallbackPreview=Modules\DailyDigest\Services\RecipientLocale::run($fallbackDigest['user'], function () use ($fallbackDigest) { return view('dailydigest::email',$fallbackDigest)->render(); });
+        check($fallbackPreview===$expectedEnglishHtml, $unsupportedLocale.' preview also falls back to English');
+        check(app()->getLocale()==='es' && $fallbackDigest['user']->locale===$unsupportedLocale, $unsupportedLocale.' fallback preserves worker and profile language');
+    }
+    app()->setLocale('en');
+
+    $failingLocalizedMailer=new class extends DigestMailer { protected function sendLocalized(array $digest) { throw new RuntimeException('Simulated localized failure'); } };
+    try { $failingLocalizedMailer->send($spanishDigest); } catch (RuntimeException $e) {}
+    check(app()->getLocale()==='en','failed send restores worker language');
+
     // Save settings through the core controller, exactly as the module UI does.
     $saveRequest=Illuminate\Http\Request::create('/app-settings/daily-digest','POST',['settings'=>$settings]);
     $saveRequest->setLaravelSession(app('session')->driver());
