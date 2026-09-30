@@ -12,7 +12,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY = 'andreasmuck/freescout-daily-digest'
 DIRECTORIES = ('Console', 'Http', 'Providers', 'Resources', 'Services', 'Public', 'Tests')
-FILES = ('module.json', 'start.php', 'LICENSE', 'README.md', 'CHANGELOG.md', 'VALIDATION.md', 'PUBLISHING.md')
+FILES = ('module.json', 'start.php', 'LICENSE', 'README.md', 'CHANGELOG.md', 'VALIDATION.md')
 
 
 def build(output, tag=None, repository=None):
