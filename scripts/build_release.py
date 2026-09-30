@@ -7,12 +7,53 @@ from pathlib import Path
 import re
 import shutil
 import struct
+import tempfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY = 'andreasmuck/freescout-daily-digest'
 DIRECTORIES = ('Console', 'Http', 'Providers', 'Resources', 'Services', 'Public', 'Tests')
 FILES = ('module.json', 'start.php', 'LICENSE', 'README.md', 'CHANGELOG.md', 'VALIDATION.md')
+
+
+def reject_stale_archives(output, versioned_name):
+    stale = sorted(p.name for p in output.glob('DailyDigest-*.zip') if p.name != versioned_name)
+    if stale:
+        raise ValueError('Output contains other release ZIPs: ' + ', '.join(stale)
+                         + '. Choose a fresh output directory or move those files first.')
+
+
+def publish_assets(staging, output, versioned_name):
+    reject_stale_archives(output, versioned_name)
+    assets = sorted(p for p in staging.iterdir() if p.is_file())
+    for asset in assets:
+        target = output / asset.name
+        if target.is_symlink() or (target.exists() and not target.is_file()):
+            raise ValueError('Unsafe output destination: ' + str(target))
+    existed = output.exists()
+    output.mkdir(parents=True, exist_ok=True)
+    backup = staging / 'backup'
+    backup.mkdir()
+    replaced = []
+    try:
+        # Back up all old assets before replacing any; rollback on write failure.
+        for asset in assets:
+            target = output / asset.name
+            if target.exists():
+                shutil.copy2(target, backup / asset.name)
+        for asset in assets:
+            asset.replace(output / asset.name)
+            replaced.append(asset.name)
+    except BaseException:
+        for name in reversed(replaced):
+            saved = backup / name
+            if saved.exists():
+                saved.replace(output / name)
+            else:
+                (output / name).unlink()
+        if not existed:
+            output.rmdir()
+        raise
 
 
 def build(output, tag=None, repository=None):
@@ -45,32 +86,38 @@ def build(output, tag=None, repository=None):
     png = (ROOT / 'Public/img/icon.png').read_bytes()
     if png[:8] != b'\x89PNG\r\n\x1a\n' or struct.unpack('>II', png[16:24]) != (256, 256):
         raise ValueError('Module icon must be a 256 x 256 PNG.')
-    output.mkdir(parents=True, exist_ok=True)
-    stable = output / 'DailyDigest.zip'
-    with zipfile.ZipFile(stable, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-        for path in sorted(set(paths)):
-            info = zipfile.ZipInfo('DailyDigest/' + path.relative_to(ROOT).as_posix(), (2020, 1, 1, 0, 0, 0))
-            info.compress_type = zipfile.ZIP_DEFLATED
-            info.create_system = 3
-            info.external_attr = 0o100644 << 16
-            archive.writestr(info, path.read_bytes())
-    with zipfile.ZipFile(stable) as archive:
-        if archive.testzip():
-            raise ValueError('Archive integrity check failed.')
-        for path in paths:
-            if archive.read('DailyDigest/' + path.relative_to(ROOT).as_posix()) != path.read_bytes():
-                raise ValueError('Archive does not match source: ' + str(path))
-    versioned = output / ('DailyDigest-' + version + '.zip')
-    shutil.copyfile(stable, versioned)
-    (output / 'version.txt').write_text(version + '\n')
     changelog = (ROOT / 'CHANGELOG.md').read_text()
     marker = '## ' + version + '\n'
     if marker not in changelog:
         raise ValueError('Missing changelog section for ' + version)
     notes = changelog.split(marker, 1)[1].split('\n## ', 1)[0].strip()
-    (output / 'release-notes.md').write_text(notes + '\n')
-    artifacts = [stable, versioned, output / 'version.txt']
-    (output / 'SHA256SUMS').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest() + '  ' + p.name + '\n' for p in artifacts))
+    versioned_name = 'DailyDigest-' + version + '.zip'
+    reject_stale_archives(output, versioned_name)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    # Build and verify every artifact before touching an existing release.
+    with tempfile.TemporaryDirectory(prefix='.dailydigest-build-', dir=output.parent) as temporary:
+        staging = Path(temporary)
+        stable = staging / 'DailyDigest.zip'
+        with zipfile.ZipFile(stable, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+            for path in sorted(set(paths)):
+                info = zipfile.ZipInfo('DailyDigest/' + path.relative_to(ROOT).as_posix(), (2020, 1, 1, 0, 0, 0))
+                info.compress_type = zipfile.ZIP_DEFLATED
+                info.create_system = 3
+                info.external_attr = 0o100644 << 16
+                archive.writestr(info, path.read_bytes())
+        with zipfile.ZipFile(stable) as archive:
+            if archive.testzip():
+                raise ValueError('Archive integrity check failed.')
+            for path in paths:
+                if archive.read('DailyDigest/' + path.relative_to(ROOT).as_posix()) != path.read_bytes():
+                    raise ValueError('Archive does not match source: ' + str(path))
+        versioned = staging / ('DailyDigest-' + version + '.zip')
+        shutil.copyfile(stable, versioned)
+        (staging / 'version.txt').write_text(version + '\n')
+        (staging / 'release-notes.md').write_text(notes + '\n')
+        artifacts = [stable, versioned, staging / 'version.txt']
+        (staging / 'SHA256SUMS').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest() + '  ' + p.name + '\n' for p in artifacts))
+        publish_assets(staging, output, versioned_name)
     print('Verified release ' + version + ': ' + str(len(set(paths))) + ' files in ' + str(output))
 
 

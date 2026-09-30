@@ -30,6 +30,9 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Test release builder
+        run: python3 -m unittest discover -s scripts -p 'test_*.py'
+
       - name: Validate tag and build release assets
         env:
           RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
