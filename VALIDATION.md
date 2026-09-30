@@ -1,13 +1,24 @@
-# Validation — Daily Digest 1.0.1
+# Validation — Daily Digest 1.0.2
+
+Validation date: 2026-09-30.
+
+## Current release results
+
+- Release-builder regression suite: **6 tests passed** on the current 1.0.2 source.
+- PHP syntax validation: **11 non-Blade PHP files passed** with PHP 8.3.32.
+- FreeScout integration suite: **78 checks passed** on the current 1.0.2 source with PHP 8.2.29. A confirmation run on the refreshed fixture exited successfully in 0.48 seconds.
+- Online update from 1.0.1 to 1.0.2: **not yet tested**.
+
+## Integration environment and limitations
 
 - Target: FreeScout 1.8.241, commit `88734eec10a898682a8dc0e846459f477d60600a`.
 - Runtime integration: PHP 8.2.29 with a disposable SQLite database and actual FreeScout models, policies, settings controller, module loader, scheduler, Blade renderer and SwiftMailer integration.
 - All final email transports were intercepted; no real email was sent.
 - Additional PHP syntax checks: PHP 8.3.32.
 - Production MySQL/MariaDB, SMTP delivery, and interactions with installed third-party modules remain unverified.
-- HTML and plain-text templates rendered successfully. Browser screenshot verification was unavailable in this environment; appearance in actual mail clients remains to be checked during the server trial.
+- HTML and plain-text templates rendered successfully in the 1.0.2 run. Browser screenshot verification was unavailable in this environment; appearance in actual mail clients remains to be checked during the server trial.
 
-## Integration checks
+## Integration checks — 1.0.2
 
 ```
 PASS: isolated SQLite database
@@ -92,8 +103,30 @@ PASS: chunked backlog counted without duplicate or missing rows
 78 checks passed; all email delivery was intercepted.
 ```
 
-## Release preparation
+A local 1.0.2 package build completed successfully with tag/version validation, archive integrity and packaged-content checks. This does not confirm an online installation.
 
-The release builder verifies update metadata, version/tag alignment, the 256 × 256 icon, archive integrity and packaged contents. GitHub Actions and an actual server update remain unverified until publication and a staging install.
+## Release-builder regression checks — 1.0.2
 
-Local release checks passed: two builds produced identical ZIPs; a mismatched tag was rejected; the extracted ZIP passed all 78 integration checks on PHP 8.2.29. Workflow YAML parsed successfully. No real email was sent.
+Command: `python3 -m unittest discover -s scripts -p 'test_*.py' -v`
+
+All six checks passed:
+
+- Successful builds are reproducible and their checksums match.
+- A missing changelog section leaves existing release assets unchanged.
+- Archive validation failure leaves existing release assets unchanged and removes temporary build files.
+- A stale versioned ZIP is rejected without modifying output files.
+- A failure while replacing assets restores the previous release files.
+- A failure while creating a new release removes its partial output directory.
+
+These checks use disposable directories and simulated failures. They do not validate GitHub Actions execution or a FreeScout server update.
+
+## Pending server validation
+
+After publishing 1.0.2, record the actual server's FreeScout and PHP versions, the test date, and the results of:
+
+- Detection and installation of 1.0.2 through Manage → Modules on an update-enabled 1.0.1 installation.
+- Confirmation that the installed version becomes 1.0.2.
+- Preservation of Daily Digest settings.
+- Successful recipient digest preview after the update.
+
+GitHub Actions execution, the online update, and production mail delivery remain unverified in this local report.

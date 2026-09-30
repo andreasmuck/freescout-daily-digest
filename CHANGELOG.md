@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2
+
+- Improve release workflow
+- Test online updating through Freescout
+
 ## 1.0.1
 
 - Add a 256 × 256 square-corner conversation-and-reminder icon to the FreeScout Modules page and README.
