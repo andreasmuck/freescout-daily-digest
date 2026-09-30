@@ -120,8 +120,6 @@ To stop reminders, set **Daily delivery → Disabled** and save. You can also de
 
 Validated with the actual FreeScout 1.8.241 source, commit `88734eec10a898682a8dc0e846459f477d60600a`, PHP 8.2.29, and an isolated SQLite fixture database. PHP syntax was also checked with PHP 8.3.32. The included integration checks cover module discovery, settings saving, scheduler registration, mailbox permissions, conversation filtering, age boundaries, Chilean DST, daily repeat/deduplication, failures, large backlogs, HTML escaping, multipart mail, and administrator-only preview access. Mail transports were intercepted; no real email was sent.
 
-Not yet installed or tested on your server, your production database, or your SMTP provider. Other third-party modules and later FreeScout versions may need compatibility checks. English and Spanish are included. Settings and preview controls follow the signed-in administrator’s FreeScout language. Email subjects, HTML, plain text, and the email content inside previews follow the recipient’s profile language (or FreeScout’s default when unset).
-
 For developers, install this module in a **disposable** checkout of that FreeScout release (with bundled `vendor/`) and run:
 
 ```sh
