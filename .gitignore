@@ -3,11 +3,7 @@
 .env
 .env.*
 !.env.example
-
-# Local build and integration-test workspaces
 /dist/
 /work/
 __pycache__/
-
-# Personal publishing instructions
 /PUBLISHING.md
