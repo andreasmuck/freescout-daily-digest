@@ -7,7 +7,7 @@
     "license": "AGPL-3.0",
     "author": "Andreas Muck",
     "authorUrl": "https://muck.biz",
-    "detailsUrl": "https://github.com/andreasmuck/Freescout-DailyDigest",
+    "detailsUrl": "https://github.com/andreasmuck/freescout-daily-digest",
     "active": 0,
     "order": 0,
     "providers": [
@@ -19,6 +19,6 @@
     ],
     "requires": [],
     "img": "dailydigest/img/icon.png",
-    "latestVersionUrl": "https://github.com/andreasmuck/Freescout-DailyDigest/releases/latest/download/version.txt",
-    "latestVersionZipUrl": "https://github.com/andreasmuck/Freescout-DailyDigest/releases/latest/download/DailyDigest.zip"
+    "latestVersionUrl": "https://github.com/andreasmuck/freescout-daily-digest/releases/latest/download/version.txt",
+    "latestVersionZipUrl": "https://github.com/andreasmuck/freescout-daily-digest/releases/latest/download/DailyDigest.zip"
 }

@@ -2,7 +2,7 @@
 
 <img src="Public/img/icon.png" alt="Daily Digest conversation and reminder icon" width="128" height="128">
 
-[Download the latest release](https://github.com/andreasmuck/Freescout-DailyDigest/releases/latest) · [Publishing guide](PUBLISHING.md)
+[Download the latest release](https://github.com/andreasmuck/freescout-daily-digest/releases/latest) · [Publishing guide](PUBLISHING.md)
 
 Version 1.0.1 · Built and tested against FreeScout **1.8.241**.
 
