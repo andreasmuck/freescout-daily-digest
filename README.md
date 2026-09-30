@@ -33,18 +33,7 @@ Activate the module in the browser after clearing the cache. If you already have
 
 This build includes FreeScout’s native update metadata. Once a higher stable version is published in the public GitHub repository, open **Manage → Modules** and click **Update** for Daily Digest. Updating is initiated by an administrator; the module does not install updates in the background.
 
-FreeScout reads `latestVersionUrl` from `module.json` to retrieve the latest version number and `latestVersionZipUrl` to download the release package. Both use GitHub’s latest published release. Drafts and prereleases are not the production update feed. The GitHub repository must be public and your FreeScout server must be able to download its release assets.
-
-**One manual update is required** for installations of 1.0.0 or earlier 1.0.1 packages that lack these URLs. Extract the current package over `Modules/DailyDigest`, then run:
-
-```sh
-cd /var/www/freescout
-sudo -u www-data php artisan freescout:module-install dailydigest
-```
-
-After that, future higher versions can use the Modules page. Saved settings and delivery records remain in FreeScout’s database. FreeScout’s native updater installs the new files and runs the module installation command. It does not automatically roll back failed updates; keep your normal application and database backups. The supplied checksum is for manual verification; FreeScout’s native updater does not verify this checksum file.
-
-The bundled icon is a fully opaque, square 256 × 256 PNG. FreeScout applies its standard display rounding. If the old image remains visible after an update, purge the specific icon URL from your browser or CDN cache.
+FreeScout reads `latestVersionUrl` from `module.json` to retrieve the latest version number and `latestVersionZipUrl` to download the release package. Both use GitHub’s latest published release. Drafts and prereleases are not the production update feed.
 
 ## Language
 
