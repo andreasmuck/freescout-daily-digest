@@ -7,16 +7,18 @@ Validation date: 2026-09-30.
 - Release-builder regression suite: **6 tests passed** on the current 1.0.2 source.
 - PHP syntax validation: **11 non-Blade PHP files passed** with PHP 8.3.32.
 - FreeScout integration suite: **78 checks passed** on the current 1.0.2 source with PHP 8.2.29. A confirmation run on the refreshed fixture exited successfully in 0.48 seconds.
-- Online update from 1.0.1 to 1.0.2: **not yet tested**.
+- Online update from 1.0.1 to 1.0.2: **passed**, confirmed by the user on 2026-09-30; installed version, settings preservation and digest preview verified.
+- Actual email delivery and appearance in **1.0.1: confirmed in English and Spanish**.
+- Actual email delivery and mail-client appearance in **1.0.2: confirmed**
 
 ## Integration environment and limitations
 
 - Target: FreeScout 1.8.241, commit `88734eec10a898682a8dc0e846459f477d60600a`.
 - Runtime integration: PHP 8.2.29 with a disposable SQLite database and actual FreeScout models, policies, settings controller, module loader, scheduler, Blade renderer and SwiftMailer integration.
-- All final email transports were intercepted; no real email was sent.
+- In the automated integration suite, all final email transports were intercepted; no real email was sent by those tests. Separate user-confirmed server results are recorded below.
 - Additional PHP syntax checks: PHP 8.3.32.
-- Production MySQL/MariaDB, SMTP delivery, and interactions with installed third-party modules remain unverified.
-- HTML and plain-text templates rendered successfully in the 1.0.2 run. Browser screenshot verification was unavailable in this environment; appearance in actual mail clients remains to be checked during the server trial.
+- No separate production MySQL/MariaDB compatibility matrix or third-party module interaction testing was performed. Actual email delivery is confirmed for 1.0.1 only; 1.0.2 delivery remains pending.
+- HTML and plain-text templates rendered successfully in the automated 1.0.2 run, and the user confirmed the post-update preview looks good. Actual emails looked good in English and Spanish on 1.0.1; mail-client appearance on 1.0.2 remains pending.
 
 ## Integration checks — 1.0.2
 
@@ -120,13 +122,26 @@ All six checks passed:
 
 These checks use disposable directories and simulated failures. They do not validate GitHub Actions execution or a FreeScout server update.
 
-## Pending server validation
+## User-confirmed server validation — 2026-09-30
 
-After publishing 1.0.2, record the actual server's FreeScout and PHP versions, the test date, and the results of:
+These results are based on the user's reports and the FreeScout update-success screenshot, separately from the local automated tests.
 
-- Detection and installation of 1.0.2 through Manage → Modules on an update-enabled 1.0.1 installation.
-- Confirmation that the installed version becomes 1.0.2.
-- Preservation of Daily Digest settings.
-- Successful recipient digest preview after the update.
+### Online update: 1.0.1 → 1.0.2 — passed
 
-GitHub Actions execution, the online update, and production mail delivery remain unverified in this local report.
+- FreeScout's PHP HTTP client retrieved version `1.0.2` and reported that an update was available.
+- The update appeared under **Manage → Modules** after running `php artisan freescout:clear-cache` and refreshing the page. A page refresh alone initially did not display it; the exact cache responsible was not established.
+- FreeScout reported that Daily Digest updated successfully. The installation output confirmed cache refresh, no required migrations, and an existing public asset symlink.
+- The user confirmed that the module displays **1.0.2**.
+- The user confirmed that saved Daily Digest settings were preserved.
+- The user confirmed that the digest preview looks good after the update.
+
+### Actual email delivery: 1.0.1 — passed
+
+- The user confirmed that actual emails were delivered and looked good in **English** and **Spanish** on version **1.0.1**.
+- This confirms delivery and visual appearance for the user's tested setup. The specific mail clients, transport logs, and separate plain-text-part inspection were not supplied.
+
+### Remaining validation
+
+- Actual email delivery and mail-client appearance for **1.0.2** remain pending. The user plans to confirm them on **2026-10-01**; results must not be inferred from the successful preview or 1.0.1 delivery.
+- FreeScout 1.8.241 was the previously reported server version; the exact FreeScout and PHP versions at the time of the server upgrade were not reconfirmed.
+- GitHub Actions job logs were not independently reviewed as part of this validation update. Local build/test results and the user-confirmed online upgrade are recorded separately above.
