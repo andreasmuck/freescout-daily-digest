@@ -12,6 +12,9 @@
 ```
 PASS: isolated SQLite database
 PASS: module auto-discovery and command registration
+PASS: FreeScout loads the correct online version metadata key
+PASS: FreeScout loads the stable update ZIP URL
+PASS: obsolete version metadata key is absent
 PASS: preview route registration
 PASS: preview restricted to authenticated admins
 PASS: global settings hook
@@ -86,5 +89,11 @@ PASS: malformed user filter rejected
 PASS: missing user reported
 PASS: chunked backlog counted without duplicate or missing rows
 
-75 checks passed; all email delivery was intercepted.
+78 checks passed; all email delivery was intercepted.
 ```
+
+## Release preparation
+
+The release builder verifies update metadata, version/tag alignment, the 256 × 256 icon, archive integrity and packaged contents. GitHub Actions and an actual server update remain unverified until publication and a staging install.
+
+Local release checks passed: two builds produced identical ZIPs; a mismatched tag was rejected; the extracted ZIP passed all 78 integration checks on PHP 8.2.29. Workflow YAML parsed successfully. No real email was sent.

@@ -1,13 +1,13 @@
 {
-    "name": "DailyDigest",
+    "name": "Daily Digest",
     "alias": "dailydigest",
     "description": "One daily email per user with their aging active conversations across all accessible mailboxes.",
     "version": "1.0.1",
     "requiredAppVersion": "1.8.241",
     "license": "AGPL-3.0",
-    "author": "",
-    "authorUrl": "",
-    "detailsUrl": "",
+    "author": "Andreas Muck",
+    "authorUrl": "https://muck.biz",
+    "detailsUrl": "https://github.com/andreasmuck/Freescout-DailyDigest",
     "active": 0,
     "order": 0,
     "providers": [
@@ -18,5 +18,7 @@
         "start.php"
     ],
     "requires": [],
-    "img": "dailydigest/img/icon.png"
+    "img": "dailydigest/img/icon.png",
+    "latestVersionUrl": "https://github.com/andreasmuck/Freescout-DailyDigest/releases/latest/download/version.txt",
+    "latestVersionZipUrl": "https://github.com/andreasmuck/Freescout-DailyDigest/releases/latest/download/DailyDigest.zip"
 }

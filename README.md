@@ -2,6 +2,8 @@
 
 <img src="Public/img/icon.png" alt="Daily Digest conversation and reminder icon" width="128" height="128">
 
+[Download the latest release](https://github.com/andreasmuck/Freescout-DailyDigest/releases/latest) · [Publishing guide](PUBLISHING.md)
+
 Version 1.0.1 · Built and tested against FreeScout **1.8.241**.
 
 Sends one daily email per active human user containing their assigned Active conversations across all accessible, active mailboxes. The same conversations return in the next day's digest while they remain eligible. Configure it once under **Manage → Settings → Daily Digest**.
@@ -27,11 +29,28 @@ sudo -u www-data php artisan freescout:clear-cache
 
 Activate the module in the browser after clearing the cache. If you already have a `Modules/DailyDigest` directory, back it up before replacing it; do not blindly overwrite a different module with the same name.
 
+## Online updates
+
+This build includes FreeScout’s native update metadata. Once a higher stable version is published in the public GitHub repository, open **Manage → Modules** and click **Update** for Daily Digest. Updating is initiated by an administrator; the module does not install updates in the background.
+
+FreeScout reads `latestVersionUrl` from `module.json` to retrieve the latest version number and `latestVersionZipUrl` to download the release package. Both use GitHub’s latest published release. Drafts and prereleases are not the production update feed. The GitHub repository must be public and your FreeScout server must be able to download its release assets.
+
+**One manual update is required** for installations of 1.0.0 or earlier 1.0.1 packages that lack these URLs. Extract the current package over `Modules/DailyDigest`, then run:
+
+```sh
+cd /var/www/freescout
+sudo -u www-data php artisan freescout:module-install dailydigest
+```
+
+After that, future higher versions can use the Modules page. Saved settings and delivery records remain in FreeScout’s database. FreeScout’s native updater installs the new files and runs the module installation command. It does not automatically roll back failed updates; keep your normal application and database backups. The supplied checksum is for manual verification; FreeScout’s native updater does not verify this checksum file.
+
+The bundled icon is a fully opaque, square 256 × 256 PNG. FreeScout applies its standard display rounding. If the old image remains visible after an update, purge the specific icon URL from your browser or CDN cache.
+
 ## Language
 
 To use Spanish, choose **Español** as the language in your FreeScout user profile. The module settings will appear as **Resumen diario**; enable reminders with **Envío diario** and save. Each recipient’s email uses their own profile language, independently of the administrator’s language. English (`en`) and Spanish (`es`) are supported; any other language setting falls back to English for the complete subject, HTML, plain text, and email preview. The recipient’s profile setting is not changed.
 
-When updating an existing installation, replace the module files, including `Resources/lang/es.json` and `Services/RecipientLocale.php`, then run `sudo -u www-data php artisan freescout:clear-cache` from your FreeScout application directory. Existing delivery settings are preserved.
+When updating an existing installation manually, replace the module files, including `Resources/lang/es.json`, `Services/RecipientLocale.php`, and `Public/img/icon.png`, then run `sudo -u www-data php artisan freescout:module-install dailydigest` from your FreeScout application directory. This creates or repairs the public asset link and clears cached files. Existing delivery settings are preserved.
 
 ## Suggested initial settings
 

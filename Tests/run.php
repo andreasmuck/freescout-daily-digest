@@ -35,6 +35,10 @@ function option($key, $value) { Option::set($key, $value); Option::$cache = []; 
 try {
     check(config('database.default') === 'sqlite' && config('database.connections.sqlite.database') === $database, 'isolated SQLite database');
     check(isset(Artisan::all()['freescout:daily-digest']), 'module auto-discovery and command registration');
+    $installedModule=Module::findByAlias('dailydigest');
+    check($installedModule->get('latestVersionUrl')==='https://github.com/andreasmuck/Freescout-DailyDigest/releases/latest/download/version.txt', 'FreeScout loads the correct online version metadata key');
+    check($installedModule->get('latestVersionZipUrl')==='https://github.com/andreasmuck/Freescout-DailyDigest/releases/latest/download/DailyDigest.zip', 'FreeScout loads the stable update ZIP URL');
+    check(!$installedModule->get('latestVersionNumberUrl'), 'obsolete version metadata key is absent');
     check(Route::has('dailydigest.preview'), 'preview route registration');
     $route = Route::getRoutes()->getByName('dailydigest.preview');
     check($route->getAction('roles') === ['admin'] && in_array('auth', $route->middleware()), 'preview restricted to authenticated admins');

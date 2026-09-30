@@ -1,0 +1,72 @@
+name: Prepare release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag, for example v1.0.1
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref_name }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate tag and build release assets
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")"
+          python3 scripts/build_release.py --tag "$RELEASE_TAG" --repository "$GITHUB_REPOSITORY"
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, sqlite3, pdo_sqlite, fileinfo, curl, zip
+          coverage: none
+
+      - name: Check out the tested FreeScout version
+        uses: actions/checkout@v4
+        with:
+          repository: freescout-help-desk/freescout
+          ref: 88734eec10a898682a8dc0e846459f477d60600a
+          path: work/freescout
+          persist-credentials: false
+
+      - name: Test the packaged module
+        run: |
+          unzip -q dist/DailyDigest.zip -d work/freescout/Modules
+          find work/freescout/Modules/DailyDigest -name '*.php' ! -name '*.blade.php' -print0 | xargs -0 -n1 php -l
+          php work/freescout/Modules/DailyDigest/Tests/run.php "$GITHUB_WORKSPACE/work/freescout"
+
+      - name: Create draft release with verified assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          # No --clobber: an existing release is never silently overwritten.
+          gh release create "$RELEASE_TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag --draft \
+            --title "Daily Digest $RELEASE_TAG" \
+            --notes-file dist/release-notes.md \
+            dist/DailyDigest.zip dist/DailyDigest-*.zip dist/version.txt dist/SHA256SUMS
