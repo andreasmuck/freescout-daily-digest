@@ -10,8 +10,13 @@
     "detailsUrl": "",
     "active": 0,
     "order": 0,
-    "providers": ["Modules\\DailyDigest\\Providers\\DailyDigestServiceProvider"],
+    "providers": [
+        "Modules\\DailyDigest\\Providers\\DailyDigestServiceProvider"
+    ],
     "aliases": {},
-    "files": ["start.php"],
-    "requires": []
+    "files": [
+        "start.php"
+    ],
+    "requires": [],
+    "img": "dailydigest/img/icon.png"
 }

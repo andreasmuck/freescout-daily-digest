@@ -1,5 +1,7 @@
 # Daily Digest for FreeScout
 
+<img src="Public/img/icon.png" alt="Daily Digest conversation and reminder icon" width="128" height="128">
+
 Version 1.0.1 · Built and tested against FreeScout **1.8.241**.
 
 Sends one daily email per active human user containing their assigned Active conversations across all accessible, active mailboxes. The same conversations return in the next day's digest while they remain eligible. Configure it once under **Manage → Settings → Daily Digest**.

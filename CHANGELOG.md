@@ -2,6 +2,8 @@
 
 ## 1.0.1
 
+- Add a custom conversation-and-reminder icon to the FreeScout Modules page and README.
+
 - Add 57 Spanish translations for settings, previews, and digest emails.
 - Use each recipient’s FreeScout language for email subjects, HTML, plain text, and email previews.
 - Fall back to English for language settings other than `en` or `es`, avoiding mixed-language emails.
