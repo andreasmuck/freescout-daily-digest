@@ -13,8 +13,9 @@
     </div>
     <div class="form-group">
         <label for="dd_time" class="col-sm-3 control-label">{{ __('Delivery time') }}</label>
-        <div class="col-sm-7"><input id="dd_time" type="time" required name="settings[dd_time]" value="{{ old('settings.dd_time', $settings['dd_time']) }}" class="form-control">
-        <p class="help-block">{{ __('Delivery starts within five minutes of this time. If the scheduler was unavailable, it catches up later the same day.') }}</p></div>
+        <div class="col-sm-7">
+        <input id="dd_time" type="text" required name="settings[dd_time]" value="{{ old('settings.dd_time', $settings['dd_time']) }}" class="form-control" placeholder="HH:MM" pattern="([01][0-9]|2[0-3]):[0-5][0-9]" aria-describedby="dd_time_help" autocomplete="off">
+        <p id="dd_time_help" class="help-block">{{ __('Delivery starts within five minutes of this time. If the scheduler was unavailable, it catches up later the same day.') }}</p></div>
     </div>
     <div class="form-group">
         <label for="dd_timezone" class="col-sm-3 control-label">{{ __('Time zone') }}</label>
@@ -68,3 +69,18 @@
     {{ __('Accepted by mail transport') }}: {{ $digest_last_run['accepted'] }} · {{ __('Failed or uncertain') }}: {{ $digest_last_run['failed'] }}</p>
     <p class="help-block">{{ __('Transport acceptance does not confirm inbox delivery. Failed or interrupted sends are not retried automatically that day; check App Logs and your mail provider logs.') }}</p>
 @endif
+
+@include('partials/include_datepicker')
+
+@section('javascript')
+    @parent
+    flatpickr('#dd_time', {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: 'H:i',
+        time_24hr: true,
+        minuteIncrement: 1,
+        allowInput: true,
+        disableMobile: true
+    });
+@endsection

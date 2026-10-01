@@ -55,5 +55,7 @@
     "Open FreeScout": "Abrir FreeScout",
     "Times shown in :zone. Age is measured from creation.": "Las horas se muestran en la zona :zone. La antigüedad se mide desde la creación.",
     "Matching conversations remain in each daily digest until their status, assignment, access, or age eligibility changes. This email does not change any conversation.": "Las conversaciones que cumplen los criterios seguirán apareciendo en cada resumen diario hasta que cambie su estado, asignación, acceso o antigüedad aplicable. Este correo no modifica ninguna conversación.",
-    "Daily reminder: :count active conversations": "Recordatorio diario: :count conversaciones activas"
+    "Daily reminder: :count active conversations": "Recordatorio diario: :count conversaciones activas",
+    "Hour": "Hora",
+    "Minute": "Minuto"
 }
