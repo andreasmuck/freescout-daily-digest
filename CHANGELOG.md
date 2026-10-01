@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.3
+
+- Replace the browser-native delivery-time field with FreeScout's bundled Flatpickr time picker for consistent controls across browsers.
+- Preserve the saved 24-hour `HH:MM` format and allow selection of every minute.
+
 ## 1.0.2
 
 - Improve release workflow
