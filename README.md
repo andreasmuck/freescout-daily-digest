@@ -6,7 +6,7 @@
 
 Built against FreeScout **1.8.241**.
 
-Tested with Freescout **1.8.241** - 1.8.248**.
+Tested with Freescout **1.8.241** - **1.8.248**.
 
 Sends one daily email per active human user containing their assigned Active conversations across all accessible, active mailboxes. The same conversations return in the next day's digest while they remain eligible. Configure it once under **Manage → Settings → Daily Digest**.
 
