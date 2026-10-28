@@ -1,4 +1,16 @@
-# Validation — Daily Digest 1.0.2
+# Validation — Daily Digest 1.0.4
+
+Validation date: 2026-10-28.
+
+- Latest stable FreeScout release verified: **1.8.248**, commit `56c4d014cfbd5e0b038cc887d71e0c75fd6c3f1b`.
+- **78 integration checks passed** on a fresh checkout with PHP 8.2.29 and temporary SQLite database. All email transports were intercepted; no real email was sent.
+- **6 release-builder regression tests passed**. The generated 1.0.4 ZIP was also extracted and its integration suite passed all 78 checks on FreeScout 1.8.248.
+- Update metadata now points to `https://downloads.muck.biz/version.txt` and `https://downloads.muck.biz/DailyDigest.zip`; automated assertions verify those URLs.
+- GitHub release workflow now tests the pinned 1.8.248 commit above.
+
+## Earlier release validation
+
+### Daily Digest 1.0.2
 
 Validation date: 2026-09-30.
 

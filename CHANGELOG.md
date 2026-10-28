@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.4
+
+- Test against FreeScout 1.8.248.
+- Serve updates though downloads.muck.biz.
+
 ## 1.0.3
 
 - Replace the browser-native delivery-time field with FreeScout's bundled Flatpickr time picker for consistent controls across browsers.

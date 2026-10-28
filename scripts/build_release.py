@@ -68,8 +68,8 @@ def build(output, tag=None, repository=None):
     base = 'https://github.com/' + REPOSITORY
     for key, expected in {
         'detailsUrl': base,
-        'latestVersionUrl': base + '/releases/latest/download/version.txt',
-        'latestVersionZipUrl': base + '/releases/latest/download/DailyDigest.zip',
+        'latestVersionUrl': 'https://downloads.muck.biz/version.txt',
+        'latestVersionZipUrl': 'https://downloads.muck.biz/DailyDigest.zip',
     }.items():
         if manifest.get(key) != expected:
             raise ValueError('Incorrect ' + key)

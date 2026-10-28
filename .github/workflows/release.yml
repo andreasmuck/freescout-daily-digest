@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: freescout-help-desk/freescout
-          ref: 88734eec10a898682a8dc0e846459f477d60600a
+          ref: 56c4d014cfbd5e0b038cc887d71e0c75fd6c3f1b
           path: work/freescout
           persist-credentials: false
 

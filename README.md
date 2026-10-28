@@ -35,7 +35,7 @@ Activate the module in the browser after clearing the cache. If you already have
 
 This build includes FreeScout’s native update metadata. Once a higher stable version is published in the public GitHub repository, open **Manage → Modules** and click **Update** for Daily Digest. Updating is initiated by an administrator; the module does not install updates in the background.
 
-FreeScout reads `latestVersionUrl` from `module.json` to retrieve the latest version number and `latestVersionZipUrl` to download the release package. Both use GitHub’s latest published release. Drafts and prereleases are not the production update feed.
+FreeScout reads `latestVersionUrl` from `module.json` to retrieve the latest version number and `latestVersionZipUrl` to download the release package. Both use `downloads.muck.biz`, which proxies GitHub’s latest published release.
 
 ## Language
 
@@ -109,7 +109,7 @@ To stop reminders, set **Daily delivery → Disabled** and save. You can also de
 
 ## Validation and limits
 
-Validated with the actual FreeScout 1.8.241 source, commit `88734eec10a898682a8dc0e846459f477d60600a`, PHP 8.2.29, and an isolated SQLite fixture database. PHP syntax was also checked with PHP 8.3.32. The included integration checks cover module discovery, settings saving, scheduler registration, mailbox permissions, conversation filtering, age boundaries, Chilean DST, daily repeat/deduplication, failures, large backlogs, HTML escaping, multipart mail, and administrator-only preview access. Mail transports were intercepted; no real email was sent.
+Release 1.0.4 validated with FreeScout 1.8.248 source, commit `56c4d014cfbd5e0b038cc887d71e0c75fd6c3f1b`, PHP 8.2.29, and an isolated SQLite fixture database. Earlier releases also underwent PHP 8.3.32 syntax checks. The included integration checks cover module discovery, settings saving, scheduler registration, mailbox permissions, conversation filtering, age boundaries, Chilean DST, daily repeat/deduplication, failures, large backlogs, HTML escaping, multipart mail, and administrator-only preview access. Mail transports were intercepted; no real email was sent.
 
 For developers, install this module in a **disposable** checkout of that FreeScout release (with bundled `vendor/`) and run:
 

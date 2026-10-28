@@ -1,5 +1,5 @@
 <?php
-// Run only against a disposable FreeScout 1.8.241 checkout with bundled vendor/.
+// Run only against a disposable FreeScout checkout with bundled vendor/.
 // Usage: php Modules/DailyDigest/Tests/run.php /absolute/path/to/test-checkout
 $root = realpath($argv[1] ?? '');
 if (!$root || !file_exists($root.'/vendor/autoload.php') || file_exists($root.'/.env') || file_exists($root.'/bootstrap/cache/config.php') || file_exists($root.'/storage/.installed')) {
@@ -36,8 +36,8 @@ try {
     check(config('database.default') === 'sqlite' && config('database.connections.sqlite.database') === $database, 'isolated SQLite database');
     check(isset(Artisan::all()['freescout:daily-digest']), 'module auto-discovery and command registration');
     $installedModule=Module::findByAlias('dailydigest');
-    check($installedModule->get('latestVersionUrl')==='https://github.com/andreasmuck/freescout-daily-digest/releases/latest/download/version.txt', 'FreeScout loads the correct online version metadata key');
-    check($installedModule->get('latestVersionZipUrl')==='https://github.com/andreasmuck/freescout-daily-digest/releases/latest/download/DailyDigest.zip', 'FreeScout loads the stable update ZIP URL');
+    check($installedModule->get('latestVersionUrl')==='https://downloads.muck.biz/version.txt', 'FreeScout loads the correct online version metadata key');
+    check($installedModule->get('latestVersionZipUrl')==='https://downloads.muck.biz/DailyDigest.zip', 'FreeScout loads the stable update ZIP URL');
     check(!$installedModule->get('latestVersionNumberUrl'), 'obsolete version metadata key is absent');
     check(Route::has('dailydigest.preview'), 'preview route registration');
     $route = Route::getRoutes()->getByName('dailydigest.preview');
